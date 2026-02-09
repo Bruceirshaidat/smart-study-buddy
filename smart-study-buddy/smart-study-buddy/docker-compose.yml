@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "7860:7860"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - DEFAULT_MODEL=${DEFAULT_MODEL:-gpt-4o}
+    volumes:
+      - ./src:/app/src
+      - ./examples:/app/examples
+    command: python web_app.py
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - DEFAULT_MODEL=${DEFAULT_MODEL:-gpt-4o}
+    volumes:
+      - ./src:/app/src
+    command: python api_server.py
+
+# Usage:
+# 1. Create .env file with API keys
+# 2. Start services: docker-compose up
+# 3. Web UI: http://localhost:7860
+# 4. API: http://localhost:8000/docs
